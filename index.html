@@ -1,688 +1,295 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>영신고 2022 졸업생 동창회</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Apple SD Gothic Neo",
-        "Noto Sans KR",
-        "Malgun Gothic",
-        sans-serif;
-
-      background: #f8f6f3;
-      color: #333;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    button,
-    input {
-      font-family: inherit;
-    }
-
-    .app {
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 500px;
-      min-height: 720px;
-      background: #fff;
-      border-radius: 28px;
-      padding: 45px 30px 35px;
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* ------------------------------
-       공통
-    ------------------------------ */
-
-    .screen {
-      display: none;
-      min-height: 630px;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .screen.active {
-      display: flex;
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .emoji {
-      font-size: 62px;
-      margin-bottom: 28px;
-      line-height: 1;
-    }
-
-    .title {
-      font-size: 32px;
-      font-weight: 800;
-      color: #333;
-      line-height: 1.35;
-      margin-bottom: 24px;
-      letter-spacing: -1.5px;
-    }
-
-    .subtitle {
-      font-size: 17px;
-      line-height: 1.8;
-      color: #777;
-      letter-spacing: -0.5px;
-    }
-
-    .pink {
-      color: #ff4f8b;
-      font-weight: 700;
-    }
-
-    /* ------------------------------
-       첫 화면
-    ------------------------------ */
-
-    #screen1 {
-      justify-content: flex-start;
-      padding-top: 25px;
-    }
-
-    #screen1 .emoji {
-      margin-bottom: 30px;
-    }
-
-    .date-box {
-      margin-top: 34px;
-      margin-bottom: 35px;
-      padding: 15px 25px;
-      border-radius: 50px;
-      background: #fff0f5;
-      color: #ff4f8b;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .intro-text {
-      font-size: 17px;
-      color: #777;
-      line-height: 1.8;
-      margin-bottom: 30px;
-    }
-
-    /* ------------------------------
-       버튼
-    ------------------------------ */
-
-    .button-area {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-top: auto;
-      padding-top: 20px;
-      position: relative;
-    }
-
-    .btn {
-      width: 100%;
-      min-height: 58px;
-      border: none;
-      border-radius: 40px;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #ff5c91, #ff76a5);
-      color: #fff;
-      box-shadow: 0 10px 25px rgba(255, 92, 145, 0.25);
-    }
-
-    .btn-secondary {
-      background: #f3f3f3;
-      color: #777;
-      border: 1px solid #e8e8e8;
-    }
-
-    /* 도망가는 버튼 */
-    #runawayBtn {
-      z-index: 50;
-      transition:
-        left 0.18s ease,
-        top 0.18s ease,
-        transform 0.15s ease;
-    }
-
-    #runawayBtn.running {
-      position: fixed;
-      width: min(400px, calc(100vw - 40px));
-      z-index: 9999;
-    }
-
-    /* ------------------------------
-       입력 화면
-    ------------------------------ */
-
-    .form-title {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 10px;
-      letter-spacing: -1px;
-    }
-
-    .form-description {
-      color: #888;
-      font-size: 15px;
-      margin-bottom: 35px;
-      line-height: 1.6;
-    }
-
-    .form {
-      width: 100%;
-      text-align: left;
-    }
-
-    .input-group {
-      margin-bottom: 20px;
-    }
-
-    .input-group label {
-      display: block;
-      font-size: 15px;
-      font-weight: 700;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .input-group input {
-      width: 100%;
-      height: 54px;
-      border: 1px solid #e4e4e4;
-      border-radius: 14px;
-      padding: 0 16px;
-      font-size: 16px;
-      outline: none;
-      background: #fafafa;
-      transition: 0.2s;
-    }
-
-    .input-group input:focus {
-      border-color: #ff6b9b;
-      background: #fff;
-      box-shadow: 0 0 0 4px rgba(255, 107, 155, 0.08);
-    }
-
-    .form-button {
-      margin-top: 12px;
-    }
-
-    /* ------------------------------
-       반 선택
-    ------------------------------ */
-
-    .class-title {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .class-description {
-      color: #888;
-      font-size: 15px;
-      margin-bottom: 30px;
-    }
-
-    .class-grid {
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .class-btn {
-      height: 58px;
-      border: 1px solid #ececec;
-      border-radius: 15px;
-      background: #fafafa;
-      color: #555;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .class-btn:hover {
-      border-color: #ff6b9b;
-      color: #ff4f8b;
-      background: #fff4f7;
-      transform: translateY(-2px);
-    }
-
-    .unknown-btn {
-      width: 100%;
-      height: 54px;
-      border: 1px dashed #ddd;
-      background: #fff;
-      border-radius: 15px;
-      color: #888;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .unknown-btn:hover {
-      background: #fafafa;
-    }
-
-    /* ------------------------------
-       안내 화면
-    ------------------------------ */
-
-    .invite-box {
-      width: 100%;
-      background: #fff7fa;
-      border-radius: 22px;
-      padding: 28px 20px;
-      margin: 25px 0;
-    }
-
-    .invite-date {
-      font-size: 22px;
-      color: #ff4f8b;
-      font-weight: 800;
-      margin-bottom: 15px;
-    }
-
-    .invite-text {
-      color: #666;
-      line-height: 1.8;
-      font-size: 16px;
-    }
-
-    /* ------------------------------
-       최종 화면
-    ------------------------------ */
-
-    .final-emoji {
-      font-size: 55px;
-      margin-bottom: 18px;
-    }
-
-    .final-title {
-      font-size: 29px;
-      font-weight: 800;
-      margin-bottom: 25px;
-    }
-
-    .final-card {
-      width: 100%;
-      background: #fff7fa;
-      border-radius: 22px;
-      padding: 25px 22px;
-      text-align: left;
-      margin-bottom: 22px;
-    }
-
-    .final-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 12px 0;
-      border-bottom: 1px solid #f0e5e9;
-      font-size: 15px;
-    }
-
-    .final-row:last-child {
-      border-bottom: none;
-    }
-
-    .final-label {
-      color: #999;
-      font-weight: 600;
-    }
-
-    .final-value {
-      color: #333;
-      font-weight: 800;
-      text-align: right;
-    }
-
-    .promise {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #777;
-      margin-bottom: 25px;
-    }
-
-    /* ------------------------------
-       모바일
-    ------------------------------ */
-
-    @media (max-width: 520px) {
-      .app {
-        padding: 0;
-      }
-
-      .card {
-        min-height: 100vh;
-        border-radius: 0;
-        padding: 45px 24px 30px;
-        box-shadow: none;
-      }
-
-      .title {
-        font-size: 29px;
-      }
-
-      .subtitle {
-        font-size: 16px;
-      }
-
-      .emoji {
-        font-size: 55px;
-      }
-
-      .class-grid {
-        gap: 8px;
-      }
-
-      .class-btn {
-        height: 52px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영신고 2022 졸업생 동창회</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+  background: linear-gradient(135deg, #fff0f7, #eef7ff);
+  min-height: 100vh;
+  color: #333;
+}
+
+.container {
+  width: 100%;
+  max-width: 520px;
+  margin: auto;
+  padding: 25px 18px 50px;
+}
+
+.card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 28px;
+  padding: 32px 24px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  text-align: center;
+  margin-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  font-size: 30px;
+  margin-bottom: 12px;
+  color: #ff4f91;
+}
+
+h2 {
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+p {
+  line-height: 1.7;
+}
+
+.date {
+  color: #777;
+  margin-bottom: 25px;
+}
+
+.heart {
+  font-size: 55px;
+  margin-bottom: 15px;
+}
+
+button {
+  width: 100%;
+  border: none;
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 12px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.yes {
+  background: #ff5b9d;
+  color: white;
+}
+
+.yes:hover {
+  transform: scale(1.03);
+}
+
+.no {
+  background: #eeeeee;
+  color: #777;
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 15px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  font-size: 16px;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #ff5b9d;
+}
+
+.class-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.class-btn {
+  background: #f7f7f7;
+  color: #444;
+  margin: 0;
+}
+
+.class-btn:hover {
+  background: #ffebf3;
+  color: #ff4f91;
+}
+
+.final-card {
+  border: 3px solid #ffb6d2;
+  background: linear-gradient(135deg, #fff, #fff5f9);
+}
+
+.big-heart {
+  font-size: 65px;
+}
+
+.highlight {
+  color: #ff4f91;
+  font-weight: bold;
+  font-size: 21px;
+}
+
+.info-box {
+  background: #fff0f6;
+  border-radius: 18px;
+  padding: 18px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.small {
+  font-size: 13px;
+  color: #999;
+  margin-top: 20px;
+}
+</style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <div class="card">
+  <!-- 1. 참석 여부 -->
+  <div id="screen1" class="card">
 
-    <!-- =====================================
-         화면 1 : 첫 화면
-    ====================================== -->
-    <section class="screen active" id="screen1">
+    <div class="heart">💕</div>
 
-      <div class="emoji">🎓</div>
+    <h1>우리 다시 만날래?</h1>
 
-      <h1 class="title">
-        우리 다시 만날래?
-      </h1>
+    <p class="date">
+      영신고 2022년 졸업생 동창회
+      <br>
+      <strong>2026년 10월 3일</strong>
+    </p>
 
-      <p class="subtitle">
-        시간이 정말 많이 흘렀지만<br>
-        그때의 우리는 아직 기억나잖아? 🥹
-      </p>
+    <p>
+      고등학교 졸업 후 시간이 꽤 흘렀지만<br>
+      이날만큼은 다시 그때의 우리로 돌아가요 🥹
+    </p>
 
-      <div class="date-box">
-        🗓️ 2026년 10월 3일
-      </div>
+    <button class="yes" onclick="goToScreen(2)">
+      💕 당연히 만나야지!
+    </button>
 
-      <p class="intro-text">
-        영신고 2022년 졸업생<br>
-        우리 다시 한번 모여보자! <span class="pink">💗</span>
-      </p>
+    <button
+      class="no"
+      id="noButton"
+      onmouseover="runAway()"
+      ontouchstart="runAway()"
+      onclick="runAway()">
+      😢 아쉽지만 참석이 어려워
+    </button>
 
-      <div class="button-area">
+    <p class="small">
+      ※ 참석이 어려운 버튼은 자꾸 도망가요 😂
+    </p>
 
-        <!-- 참석 -->
-        <button
-          class="btn btn-primary"
-          id="yesBtn"
-          onclick="goToScreen(2)"
-        >
-          💕 당연히 만나야지!
-        </button>
-
-        <!-- 불참 : 도망가는 버튼 -->
-        <button
-          class="btn btn-secondary"
-          id="runawayBtn"
-        >
-          😢 아쉽지만 참석이 어려워
-        </button>
-
-      </div>
-
-    </section>
+  </div>
 
 
-    <!-- =====================================
-         화면 2 : 개인정보 입력
-    ====================================== -->
-    <section class="screen" id="screen2">
+  <!-- 2. 개인정보 -->
+  <div id="screen2" class="card hidden">
 
-      <div class="emoji">📝</div>
+    <div class="heart">🎓</div>
 
-      <h2 class="form-title">
-        반가운 소식이야! 💕
-      </h2>
+    <h2>먼저 너를 알려줘!</h2>
 
-      <p class="form-description">
-        동창회 준비를 위해<br>
-        간단한 정보만 알려줘!
-      </p>
+    <p>동창회 참석 정보를 입력해주세요 💕</p>
 
-      <div class="form">
+    <input
+      id="name"
+      class="input"
+      type="text"
+      placeholder="이름">
 
-        <div class="input-group">
-          <label for="name">이름</label>
-          <input
-            type="text"
-            id="name"
-            placeholder="이름을 입력해줘"
-            autocomplete="name"
-          >
-        </div>
+    <input
+      id="age"
+      class="input"
+      type="number"
+      placeholder="나이">
 
-        <div class="input-group">
-          <label for="age">현재 나이</label>
-          <input
-            type="number"
-            id="age"
-            placeholder="예: 25"
-            min="1"
-            max="100"
-          >
-        </div>
+    <input
+      id="phone"
+      class="input"
+      type="tel"
+      placeholder="연락처">
 
-        <div class="input-group">
-          <label for="phone">연락처</label>
-          <input
-            type="tel"
-            id="phone"
-            placeholder="예: 010-1234-5678"
-            autocomplete="tel"
-          >
-        </div>
+    <button class="yes" onclick="saveInfo()">
+      다음으로 💕
+    </button>
 
-        <button
-          class="btn btn-primary form-button"
-          onclick="checkInfo()"
-        >
-          다음으로 💗
-        </button>
-
-      </div>
-
-    </section>
+  </div>
 
 
-    <!-- =====================================
-         화면 3 : 반 선택
-    ====================================== -->
-    <section class="screen" id="screen3">
+  <!-- 3. 반 선택 -->
+  <div id="screen3" class="card hidden">
 
-      <div class="emoji">🏫</div>
+    <div class="heart">🏫</div>
 
-      <h2 class="class-title">
-        우리 몇 반이었더라?
-      </h2>
+    <h2>우리 몇 반이었더라?</h2>
 
-      <p class="class-description">
-        3학년 때 몇 반이었는지 선택해줘!
-      </p>
+    <p>3학년 때 몇 반이었는지 선택해주세요!</p>
 
-      <div class="class-grid">
+    <div class="class-grid">
 
-        <button class="class-btn" onclick="selectClass('1반')">1반</button>
-        <button class="class-btn" onclick="selectClass('2반')">2반</button>
-        <button class="class-btn" onclick="selectClass('3반')">3반</button>
-        <button class="class-btn" onclick="selectClass('4반')">4반</button>
-        <button class="class-btn" onclick="selectClass('5반')">5반</button>
+      <button class="class-btn" onclick="selectClass('1반')">1반</button>
+      <button class="class-btn" onclick="selectClass('2반')">2반</button>
+      <button class="class-btn" onclick="selectClass('3반')">3반</button>
+      <button class="class-btn" onclick="selectClass('4반')">4반</button>
+      <button class="class-btn" onclick="selectClass('5반')">5반</button>
+      <button class="class-btn" onclick="selectClass('6반')">6반</button>
+      <button class="class-btn" onclick="selectClass('7반')">7반</button>
+      <button class="class-btn" onclick="selectClass('8반')">8반</button>
+      <button class="class-btn" onclick="selectClass('9반')">9반</button>
+      <button class="class-btn" onclick="selectClass('10반')">10반</button>
 
-        <button class="class-btn" onclick="selectClass('6반')">6반</button>
-        <button class="class-btn" onclick="selectClass('7반')">7반</button>
-        <button class="class-btn" onclick="selectClass('8반')">8반</button>
-        <button class="class-btn" onclick="selectClass('9반')">9반</button>
-        <button class="class-btn" onclick="selectClass('10반')">10반</button>
+    </div>
 
-      </div>
+    <button class="class-btn" onclick="selectClass('기억이 안 나요 😂')">
+      기억이 안 나요 😂
+    </button>
 
-      <button
-        class="unknown-btn"
-        onclick="selectClass('기억이 안 나요 😂')"
-      >
-        🤔 기억이 안 나요 😂
-      </button>
-
-    </section>
+  </div>
 
 
-    <!-- =====================================
-         화면 4 : 동창회 안내
-    ====================================== -->
-    <section class="screen" id="screen4">
+  <!-- 4. 완료 -->
+  <div id="screen4" class="card final-card hidden">
 
-      <div class="emoji">🎉</div>
+    <div class="big-heart">💖</div>
 
-      <h2 class="title">
-        약속 완료! 💕
-      </h2>
+    <h1>약속 완료!</h1>
 
-      <p class="subtitle">
-        이제 우리 다시 만날 준비만 하면 돼!
-      </p>
+    <p>
+      <span id="resultName" class="highlight"></span>아!
+    </p>
 
-      <div class="invite-box">
+    <p>
+      우리 진짜 다시 만나는 거야 🥹💕
+    </p>
 
-        <div class="invite-date">
-          📅 2026년 10월 3일
-        </div>
+    <div class="info-box">
 
-        <p class="invite-text">
-          오랜만에 만나는 친구들과<br>
-          옛날 이야기하면서<br>
-          맛있는 것도 먹고 신나게 놀자! 🥳
-        </p>
+      📅 <strong>2026년 10월 3일</strong><br><br>
 
-      </div>
+      🎓 영신고 2022 졸업생 동창회<br><br>
 
-      <button
-        class="btn btn-primary"
-        onclick="showFinal()"
-      >
-        내 동창회 약속 확인하기 💗
-      </button>
+      🏫 <span id="resultClass"></span><br><br>
 
-    </section>
+      ❤️ 그때의 우리, 다시 만나자!
 
+    </div>
 
-    <!-- =====================================
-         화면 5 : 최종 카드
-    ====================================== -->
-    <section class="screen" id="screen5">
-
-      <div class="final-emoji">💗</div>
-
-      <h2 class="final-title">
-        우리의 동창회 약속
-      </h2>
-
-      <div class="final-card">
-
-        <div class="final-row">
-          <span class="final-label">이름</span>
-          <span class="final-value" id="finalName">-</span>
-        </div>
-
-        <div class="final-row">
-          <span class="final-label">나이</span>
-          <span class="final-value" id="finalAge">-</span>
-        </div>
-
-        <div class="final-row">
-          <span class="final-label">연락처</span>
-          <span class="final-value" id="finalPhone">-</span>
-        </div>
-
-        <div class="final-row">
-          <span class="final-label">3학년</span>
-          <span class="final-value" id="finalClass">-</span>
-        </div>
-
-        <div class="final-row">
-          <span class="final-label">동창회</span>
-          <span class="final-value">참석 💕</span>
-        </div>
-
-      </div>
-
-      <p class="promise">
-        2026년 10월 3일에는<br>
-        다 같이 웃으면서 만나자! 🥹❤️<br>
-        <strong>그때 꼭 보자!</strong>
-      </p>
-
-      <button
-        class="btn btn-primary"
-        onclick="goToScreen(1)"
-      >
-        처음으로 돌아가기 🏠
-      </button>
-
-    </section>
+    <p>
+      오랜만에 보는 친구들과<br>
+      실컷 웃고 떠들 준비하고 와요 😆
+    </p>
 
   </div>
 
@@ -691,373 +298,167 @@
 
 <script>
 
-  /* =========================================
-     저장할 정보
-  ========================================= */
+// ================================
+// 동창회 정보
+// ================================
 
-  let reunionData = {
-    name: "",
-    age: "",
-    phone: "",
-    className: ""
+let reunionData = {
+  name: "",
+  age: "",
+  phone: "",
+  className: ""
+};
+
+
+// ================================
+// 화면 이동
+// ================================
+
+function goToScreen(number) {
+
+  document.querySelectorAll(".card").forEach(function(card) {
+    card.classList.add("hidden");
+  });
+
+  document.getElementById("screen" + number)
+    .classList.remove("hidden");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+// ================================
+// 참석 어려움 버튼 도망가기
+// ================================
+
+function runAway() {
+
+  const button = document.getElementById("noButton");
+
+  const maxX = window.innerWidth - button.offsetWidth - 20;
+  const maxY = window.innerHeight - button.offsetHeight - 20;
+
+  const x = Math.max(10, Math.random() * maxX);
+  const y = Math.max(10, Math.random() * maxY);
+
+  button.style.position = "fixed";
+  button.style.left = x + "px";
+  button.style.top = y + "px";
+  button.style.zIndex = "9999";
+}
+
+
+// ================================
+// 이름 / 나이 / 연락처 저장
+// ================================
+
+function saveInfo() {
+
+  const name = document.getElementById("name").value.trim();
+  const age = document.getElementById("age").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+
+  if (!name) {
+    alert("이름을 입력해주세요 💕");
+    return;
+  }
+
+  if (!age) {
+    alert("나이를 입력해주세요 💕");
+    return;
+  }
+
+  if (!phone) {
+    alert("연락처를 입력해주세요 💕");
+    return;
+  }
+
+  reunionData.name = name;
+  reunionData.age = age;
+  reunionData.phone = phone;
+
+  goToScreen(3);
+}
+
+
+// ================================
+// 반 선택
+// ================================
+
+function selectClass(className) {
+
+  reunionData.className = className;
+
+  // 구글 시트로 자동 저장
+  saveToGoogleSheet();
+
+  // 결과 화면
+  document.getElementById("resultName").innerText =
+    reunionData.name;
+
+  document.getElementById("resultClass").innerText =
+    reunionData.className;
+
+  goToScreen(4);
+}
+
+
+// ================================
+// ⭐ 구글 시트 자동 저장
+// ================================
+
+function saveToGoogleSheet() {
+
+  const GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbyr8GmU02O4eiZQLbh-E32keR9b2hV69jJWpZs4ZY0aAmSosF4j-9wdB5c-3f0BmfWP/exec";
+
+
+  const data = {
+
+    name: reunionData.name,
+
+    age: reunionData.age,
+
+    phone: reunionData.phone,
+
+    className: reunionData.className
+
   };
 
 
-  /* =========================================
-     화면 이동
-  ========================================= */
+  fetch(GOOGLE_SCRIPT_URL, {
 
-  function goToScreen(number) {
+    method: "POST",
 
-    document.querySelectorAll(".screen").forEach(function(screen) {
-      screen.classList.remove("active");
-    });
+    mode: "no-cors",
 
-    const target = document.getElementById("screen" + number);
+    headers: {
 
-    if (target) {
-      target.classList.add("active");
-    }
+      "Content-Type":
+        "text/plain;charset=utf-8"
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  }
-
-
-  /* =========================================
-     개인정보 확인
-  ========================================= */
-
-  function checkInfo() {
-
-    const name = document.getElementById("name").value.trim();
-    const age = document.getElementById("age").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-
-    if (!name) {
-      alert("이름을 입력해줘! 😊");
-      document.getElementById("name").focus();
-      return;
-    }
-
-    if (!age) {
-      alert("현재 나이를 입력해줘! 😊");
-      document.getElementById("age").focus();
-      return;
-    }
-
-    if (!phone) {
-      alert("연락처를 입력해줘! 😊");
-      document.getElementById("phone").focus();
-      return;
-    }
-
-    reunionData.name = name;
-    reunionData.age = age;
-    reunionData.phone = phone;
-
-    goToScreen(3);
-  }
-
-
-  /* =========================================
-     반 선택
-  ========================================= */
-
-  function selectClass(className) {
-
-    reunionData.className = className;
-
-    goToScreen(4);
-  }
-
-
-  /* =========================================
-     최종 카드
-  ========================================= */
-
-  function showFinal() {
-
-    document.getElementById("finalName").textContent =
-      reunionData.name || "-";
-
-    document.getElementById("finalAge").textContent =
-      reunionData.age ? reunionData.age + "세" : "-";
-
-    document.getElementById("finalPhone").textContent =
-      reunionData.phone || "-";
-
-    document.getElementById("finalClass").textContent =
-      reunionData.className || "-";
-
-    goToScreen(5);
-  }
-
-
-  /* =========================================
-     😢 불참 버튼 도망가기 기능
-  ========================================= */
-
-  const runawayBtn = document.getElementById("runawayBtn");
-
-  const funnyMessages = [
-    "어딜 가려고?! 😂",
-    "안돼!!! 😭",
-    "잠깐만!! 🏃‍♀️",
-    "10월 3일에 만나야지!!",
-    "도망가지 마!!! 😂",
-    "잡아봐~ 😝",
-    "너도 보고 싶잖아!! ❤️",
-    "불참은 안돼!! 😭",
-    "친구들이 기다려!! 🥹",
-    "한번만 만나자!! 💕"
-  ];
-
-
-  function moveRunawayButton() {
-
-    const button = runawayBtn;
-
-    /*
-      버튼을 처음 움직일 때 fixed로 변경
-    */
-
-    button.classList.add("running");
-
-    /*
-      현재 버튼 크기
-    */
-
-    const rect = button.getBoundingClientRect();
-
-    const buttonWidth = rect.width;
-    const buttonHeight = rect.height;
-
-    /*
-      화면 가장자리 여백
-    */
-
-    const margin = 15;
-
-    /*
-      버튼이 들어갈 수 있는 최대 위치 계산
-    */
-
-    const maxX =
-      Math.max(
-        margin,
-        window.innerWidth - buttonWidth - margin
-      );
-
-    const maxY =
-      Math.max(
-        margin,
-        window.innerHeight - buttonHeight - margin
-      );
-
-    /*
-      랜덤 위치
-    */
-
-    let randomX =
-      Math.floor(
-        Math.random() * (maxX - margin + 1)
-      ) + margin;
-
-    let randomY =
-      Math.floor(
-        Math.random() * (maxY - margin + 1)
-      ) + margin;
-
-
-    /*
-      너무 비슷한 위치에 계속 나오지 않도록
-      살짝 랜덤 보정
-    */
-
-    randomX = Math.max(
-      margin,
-      Math.min(randomX, maxX)
-    );
-
-    randomY = Math.max(
-      margin,
-      Math.min(randomY, maxY)
-    );
-
-
-    button.style.left = randomX + "px";
-    button.style.top = randomY + "px";
-
-    /*
-      버튼 문구도 랜덤 변경
-    */
-
-    const randomMessage =
-      funnyMessages[
-        Math.floor(Math.random() * funnyMessages.length)
-      ];
-
-    button.textContent = "😢 " + randomMessage;
-  }
-
-
-  /* =========================================
-     마우스 올리면 도망
-  ========================================= */
-
-  runawayBtn.addEventListener(
-    "mouseenter",
-    function() {
-      moveRunawayButton();
-    }
-  );
-
-
-  /* =========================================
-     클릭하려고 하면 도망
-  ========================================= */
-
-  runawayBtn.addEventListener(
-    "click",
-    function(event) {
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      moveRunawayButton();
-    }
-  );
-
-
-  /* =========================================
-     모바일 터치
-  ========================================= */
-
-  runawayBtn.addEventListener(
-    "touchstart",
-    function(event) {
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      moveRunawayButton();
     },
-    {
-      passive: false
-    }
-  );
 
+    body: JSON.stringify(data)
 
-  /* =========================================
-     마우스가 버튼 근처로 오면 도망
-  ========================================= */
+  })
 
-  document.addEventListener(
-    "mousemove",
-    function(event) {
+  .then(function() {
 
-      if (!runawayBtn.classList.contains("running")) {
-        return;
-      }
+    console.log("신청 정보가 전송되었습니다.");
 
-      const rect =
-        runawayBtn.getBoundingClientRect();
+  })
 
-      const centerX =
-        rect.left + rect.width / 2;
+  .catch(function(error) {
 
-      const centerY =
-        rect.top + rect.height / 2;
+    console.log("전송 오류:", error);
 
-      const distance =
-        Math.sqrt(
-          Math.pow(event.clientX - centerX, 2) +
-          Math.pow(event.clientY - centerY, 2)
-        );
+  });
 
-      /*
-        마우스가 100px 이내로 접근하면
-        다시 도망
-      */
-
-      if (distance < 100) {
-        moveRunawayButton();
-      }
-
-    }
-  );
-
-
-  /* =========================================
-     화면 크기 변경 시 버튼 위치 보정
-  ========================================= */
-
-  window.addEventListener(
-    "resize",
-    function() {
-
-      if (!runawayBtn.classList.contains("running")) {
-        return;
-      }
-
-      const rect =
-        runawayBtn.getBoundingClientRect();
-
-      const margin = 15;
-
-      const maxX =
-        Math.max(
-          margin,
-          window.innerWidth - rect.width - margin
-        );
-
-      const maxY =
-        Math.max(
-          margin,
-          window.innerHeight - rect.height - margin
-        );
-
-      let currentX = rect.left;
-      let currentY = rect.top;
-
-      currentX =
-        Math.max(
-          margin,
-          Math.min(currentX, maxX)
-        );
-
-      currentY =
-        Math.max(
-          margin,
-          Math.min(currentY, maxY)
-        );
-
-      runawayBtn.style.left = currentX + "px";
-      runawayBtn.style.top = currentY + "px";
-
-    }
-  );
-
-
-  /* =========================================
-     처음 화면으로 돌아올 때
-     도망 버튼 초기화
-  ========================================= */
-
-  function resetRunawayButton() {
-
-    runawayBtn.classList.remove("running");
-
-    runawayBtn.style.left = "";
-    runawayBtn.style.top = "";
-
-    runawayBtn.textContent =
-      "😢 아쉽지만 참석이 어려워";
-  }
-
+}
 
 </script>
 
